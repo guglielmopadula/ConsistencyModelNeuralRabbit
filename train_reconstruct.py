@@ -24,8 +24,8 @@ BATCH_SIZE=1
 class Encoder(nn.Module):
     def __init__(self,latent_dim):
         super(Encoder, self).__init__()
-        self.nn1=nn.Sequential(nn.Linear(6,100),nn.BatchNorm1d(100),nn.ReLU(),nn.Linear(100,100),nn.BatchNorm1d(100),nn.ReLU(),nn.Linear(100,100))
-        self.nn2=nn.Sequential(nn.Linear(100,100),nn.BatchNorm1d(100),nn.ReLU(),nn.Linear(100,100),nn.BatchNorm1d(100),nn.ReLU(),nn.Linear(100,5))
+        self.nn1=nn.Sequential(nn.Linear(6,100),nn.LayerNorm(100),nn.ReLU(),nn.Linear(100,100),nn.LayerNorm(100),nn.ReLU(),nn.Linear(100,100))
+        self.nn2=nn.Sequential(nn.Linear(100,100),nn.LayerNorm(100),nn.ReLU(),nn.Linear(100,100),nn.LayerNorm(100),nn.ReLU(),nn.Linear(100,5))
 
     def forward(self,x,pos):
         x=torch.cat((x,pos),dim=2)
@@ -42,7 +42,7 @@ class Decoder(nn.Module):
     def __init__(self,latent_dim):
         super(Decoder, self).__init__()
         self.latent_dim=latent_dim
-        self.model=nn.Sequential(nn.Linear(3+latent_dim,100),nn.BatchNorm1d(100),nn.ReLU(),nn.Linear(100,100),nn.BatchNorm1d(100),nn.Linear(100,3))
+        self.model=nn.Sequential(nn.Linear(3+latent_dim,100),nn.LayerNorm(100),nn.ReLU(),nn.Linear(100,100),nn.LayerNorm(100),nn.ReLU(),nn.Linear(100,3))
 
 
     def forward(self,latent,pos):
@@ -66,7 +66,6 @@ class AutoEncoder(nn.Module):
         latent=self.encoder(x,pos)
         x=self.decoder(latent,pos)
         return x,latent
-
 
 
 
